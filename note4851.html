@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hangman Word Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url(https://www.hitbullseye.com/images/school.svg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        #container1 {
+            text-align: center;
+            margin: 100px auto;
+            font-family: Arial, sans-serif;
+        }
+        #bigcontainer {
+            text-align: center;
+            margin: 100px auto;
+            background-color: rgba(255, 255, 255, 0.984);
+            width: 30%;
+            height: 50%;
+        }
+        
+        h1 {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 20px 0;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+    
+        #wordDisplay {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    
+        input[type="text"],
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: 2px solid #0095ff;
+            margin-right: 10px;
+        }
+    
+        #letterInput {
+            width: 200px;
+            text-align: center;
+        }
+    
+        button {
+            background-color: #0095ff;
+            color: #ffffff;
+            cursor: pointer;
+        }
+    
+        p {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    
+        #message {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #ff0000;
+        }
+    </style>    
+</head>
+
+<body>
+    <div id="bigcontainer">
+    <div id="container1">
+        <img src="https://mba.hitbullseye.com/new-code/images/hitbullseye-logo.png">
+    </div>
+    <h1>Guess a Word</h1>
+    <div id="wordDisplay"></div>
+    <p>Guess a letter: <input type="text" id="letterInput"></p>
+    <button id="guessButton">Guess</button>
+    <button id="hintButton">Hint</button>
+    <p>Guesses left: <span id="guessesLeft"></span></p>
+    <p>Guessed letters: <span id="guessedLetters"></span></p>
+    <p id="message"></p>
+
+    <script>
+        const words = [
+            "javascript",
+            "python",
+            "java",
+            "ruby",
+            "php",
+            "c++",
+            "csharp",
+            "go",
+            "swift"
+        ];
+        const hints = [
+            "A high-level programming language.",
+            "A popular language for scientific computing and data analysis.",
+            "A class-based, object-oriented programming language.",
+            "A dynamic, open-source programming language with a focus on simplicity and productivity.",
+            "A server-side scripting language commonly used for web development.",
+            "A general-purpose programming language that supports object-oriented, imperative and generic programming.",
+            "A modern, object-oriented programming language used to build Windows applications.",
+            "A statically typed, concurrent programming language developed by Google.",
+            "A powerful and intuitive programming language developed by Apple."
+        ];
+
+        let word = "";
+        let hint = "";
+
+        // Choose a random word from the array
+        const randomIndex = Math.floor(Math.random() * words.length);
+        word = words[randomIndex];
+        hint = hints[randomIndex];
+
+        // Create arrays to store game state
+        const wordLetters = word.split("");
+        const correctLetters = [];
+        for (let i = 0; i < wordLetters.length; i++) {
+            correctLetters.push("_");
+        }
+        const guessedLetters = [];
+        let guessesLeft = 8;
+
+        // Display word and guesses left
+        const wordDisplay = document.getElementById("wordDisplay");
+        wordDisplay.textContent = correctLetters.join(" ");
+        const guessesLeftDisplay = document.getElementById("guessesLeft");
+        guessesLeftDisplay.textContent = guessesLeft;
+
+        // Listen for guess
+        const guessButton = document.getElementById("guessButton");
+        guessButton.addEventListener("click", function () {
+
+            // Get player guess
+            const letterInput = document.getElementById("letterInput");
+            const guess = letterInput.value;
+            letterInput.value = "";
+
+            // Check if guess is correct
+            const correct = wordLetters.includes(guess);
+            if (correct) {
+                for (let i = 0; i < wordLetters.length; i++) {
+                    if (wordLetters[i] === guess) {
+                        correctLetters[i] = guess;
+                    }
+                }
+                wordDisplay.textContent = correctLetters.join(" ");
+            } else {
+                guessesLeft--;
+                guessesLeftDisplay.textContent = guessesLeft;
+            }
+            guessedLetters.push(guess);
+            document.getElementById("guessedLetters").textContent = guessedLetters.join(" ");
+            // Check if player won or lost
+            if (!correctLetters.includes("_")) {
+                document.getElementById("message").textContent = "You won! The word was " + word + ".";
+                guessButton.disabled = true;
+            } else if (guessesLeft === 0) {
+                document.getElementById("message").textContent = "You lost! The word was " + word + ".";
+                guessButton.disabled = true;
+            }
+        });
+
+        // Listen for hint request
+        const hintButton = document.getElementById("hintButton");
+        hintButton.addEventListener("click", function () {
+            alert("Hint: " + hint);
+        });
+    </script>
+    </div>
+</body>
+
+</html>
